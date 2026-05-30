@@ -1,0 +1,152 @@
+{
+    "subjects": [
+        {
+            "name": "Mathematics",
+            "topics": [
+                {
+                    "name": "Integration practice set",
+                    "difficulty": 3,
+                    "time_required": 2
+                },
+                {
+                    "name": "Trigonometry checkpoint",
+                    "difficulty": 2,
+                    "time_required": 1.5
+                },
+                {
+                    "name": "Differentiation drill",
+                    "difficulty": 2,
+                    "time_required": 1.5
+                }
+            ]
+        },
+        {
+            "name": "Physics",
+            "topics": [
+                {
+                    "name": "Optics revision",
+                    "difficulty": 3,
+                    "time_required": 2
+                },
+                {
+                    "name": "Waves and oscillations",
+                    "difficulty": 2,
+                    "time_required": 1.5
+                }
+            ]
+        }
+    ],
+    "exam_date": "2026-06-27",
+    "daily_hours": 4.0,
+    "preference": "balanced",
+    "schedule": {
+        "2026-05-30": [],
+        "2026-05-31": [
+            {
+                "normalized_time": 0.75,
+                "time_required": 1.5,
+                "topic": "Trigonometry checkpoint",
+                "weight": 1.5,
+                "priority": 0.5057,
+                "subject": "Mathematics"
+            },
+            {
+                "normalized_time": 0.75,
+                "time_required": 1.5,
+                "topic": "Waves and oscillations",
+                "weight": 1.5,
+                "priority": 0.4714,
+                "subject": "Physics"
+            }
+        ],
+        "2026-06-01": [
+            {
+                "normalized_time": 0.75,
+                "time_required": 1.5,
+                "topic": "Differentiation drill",
+                "weight": 1.5,
+                "priority": 0.5057,
+                "subject": "Mathematics"
+            }
+        ],
+        "2026-06-02": [],
+        "2026-06-03": [],
+        "2026-06-04": [],
+        "2026-06-05": [],
+        "2026-06-06": [],
+        "2026-06-07": [],
+        "2026-06-08": [],
+        "2026-06-09": [],
+        "2026-06-10": [],
+        "2026-06-11": [],
+        "2026-06-12": [],
+        "2026-06-13": [],
+        "2026-06-14": [],
+        "2026-06-15": [],
+        "2026-06-16": [],
+        "2026-06-17": [],
+        "2026-06-18": [],
+        "2026-06-19": [],
+        "2026-06-20": [],
+        "2026-06-21": [],
+        "2026-06-22": [],
+        "2026-06-23": [],
+        "2026-06-24": [],
+        "2026-06-25": [],
+        "2026-06-26": []
+    },
+    "progress": {
+        "completed": [
+            {
+                "normalized_time": 1.0,
+                "time_required": 2.0,
+                "topic": "Integration practice set",
+                "weight": 2.0,
+                "priority": 0.6307,
+                "subject": "Mathematics",
+                "actual_time_taken": 2.0,
+                "estimated_time": 2.0,
+                "date": "2026-05-30",
+                "planned_date": "2026-05-30"
+            },
+            {
+                "normalized_time": 1.0,
+                "time_required": 2.0,
+                "topic": "Optics revision",
+                "weight": 2.0,
+                "priority": 0.5964,
+                "subject": "Physics",
+                "actual_time_taken": 2.0,
+                "estimated_time": 2.0,
+                "date": "2026-05-30",
+                "planned_date": "2026-05-30"
+            }
+        ],
+        "pending": [
+            {
+                "normalized_time": 0.75,
+                "time_required": 1.5,
+                "topic": "Trigonometry checkpoint",
+                "weight": 1.5,
+                "priority": 0.5057,
+                "subject": "Mathematics"
+            },
+            {
+                "normalized_time": 0.75,
+                "time_required": 1.5,
+                "topic": "Waves and oscillations",
+                "weight": 1.5,
+                "priority": 0.4714,
+                "subject": "Physics"
+            },
+            {
+                "normalized_time": 0.75,
+                "time_required": 1.5,
+                "topic": "Differentiation drill",
+                "weight": 1.5,
+                "priority": 0.5057,
+                "subject": "Mathematics"
+            }
+        ]
+    }
+}

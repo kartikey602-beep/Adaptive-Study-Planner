@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StudyFlow - Premium Study Planner</title>
+<style>
+:root {
+  --bg: #0B0B0C;
+  --surface: #111113;
+  --surface-2: #171719;
+  --surface-3: #1D1D21;
+  --text: #FFFFFF;
+  --text-muted: #A0A0A7;
+  --text-soft: #6F6F76;
+  --accent: #2997FF;
+  --accent-soft: rgba(41, 151, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.12);
+  --shadow-blue: 0 0 34px rgba(41, 151, 255, 0.18);
+  --shadow-soft: 0 18px 70px rgba(0, 0, 0, 0.36);
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% -18%, rgba(41, 151, 255, 0.13), transparent 33rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 18rem),
+    var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+input,
+select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text);
+  outline: none;
+  transition:
+    border-color 180ms var(--ease),
+    background 180ms var(--ease),
+    box-shadow 180ms var(--ease);
+}
+
+input {
+  min-height: 44px;
+  padding: 0 13px;
+}
+
+select {
+  min-height: 44px;
+  padding: 0 36px 0 13px;
+  color-scheme: dark;
+}
+
+input:focus,
+select:focus {
+  border-color: rgba(41, 151, 255, 0.56);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 4px rgba(41, 151, 255, 0.1);
+}
+
+label {
+  display: block;
+}
+
+.app-shell {
+  width: min(100%, 1120px);
+  margin: 0 auto;
+  padding: 0 30px 80px;
+}
+
+.navbar {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.brand {
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.current-date {
+  color: var(--text-muted);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    transform 180ms var(--ease),
+    background 180ms var(--ease),
+    color 180ms var(--ease),
+    opacity 180ms var(--ease),
+    box-shadow 180ms var(--ease);
+}
+
+.button:hover {
+  transform: scale(1.02);
+}
+
+.button:active {
+  transform: scale(0.99);
+}
+
+.button-primary {
+  padding: 0 20px;
+  background: var(--accent);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: var(--shadow-blue);
+}
+
+.button-primary:hover {
+  background: #3FA3FF;
+  box-shadow: 0 0 40px rgba(41, 151, 255, 0.25);
+}
+
+.button-secondary {
+  min-height: auto;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.button-secondary:hover {
+  color: var(--text);
+}
+
+.button-ghost {
+  min-height: 40px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.button-ghost:hover {
+  background: rgba(255, 255, 255, 0.085);
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  padding: 18px 0 42px;
+}
+
+.stat-card {
+  min-height: 126px;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018)),
+    var(--surface);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.045),
+    0 18px 60px rgba(0, 0, 0, 0.22);
+  padding: 20px;
+}
+
+.stat-label {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.stat-value {
+  margin-top: 18px;
+  color: var(--text);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stat-note {
+  margin-top: 8px;
+  color: var(--text-soft);
+  font-size: 13px;
+}
+
+.hero {
+  padding: 24px 0 46px;
+}
+
+.hero-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 28px;
+  margin-bottom: 34px;
+}
+
+.eyebrow {
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.hero-title {
+  color: var(--text);
+  font-size: clamp(36px, 5vw, 40px);
+  font-weight: 850;
+  line-height: 1;
+}
+
+.hero-subtitle {
+  margin-top: 14px;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.task-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.task-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  min-height: 82px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: 20px;
+  transition:
+    transform 180ms var(--ease),
+    background 180ms var(--ease),
+    opacity 180ms var(--ease);
+}
+
+.task-card:hover {
+  background: var(--surface-2);
+  transform: scale(1.01);
+}
+
+.task-card.is-featured {
+  background:
+    linear-gradient(135deg, rgba(41, 151, 255, 0.18), rgba(41, 151, 255, 0.035)),
+    var(--surface-3);
+}
+
+.task-card.is-complete {
+  opacity: 0.46;
+}
+
+.task-card.is-complete .task-title {
+  text-decoration: line-through;
+}
+
+.task-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.085);
+  color: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 800;
+  transition:
+    background 180ms var(--ease),
+    color 180ms var(--ease),
+    transform 180ms var(--ease);
+}
+
+.task-check:hover {
+  transform: scale(1.07);
+  background: var(--accent-soft);
+}
+
+.task-card.is-complete .task-check {
+  background: var(--accent);
+  color: white;
+}
+
+.task-main {
+  min-width: 0;
+}
+
+.task-title {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.task-meta {
+  margin-top: 5px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.task-time {
+  color: var(--text-soft);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tabs-layer {
+  padding-top: 8px;
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  padding: 4px;
+}
+
+.tab-button {
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  transition:
+    background 180ms var(--ease),
+    color 180ms var(--ease),
+    transform 180ms var(--ease);
+}
+
+.tab-button:hover {
+  color: var(--text);
+  transform: scale(1.02);
+}
+
+.tab-button.is-active {
+  background: var(--accent);
+  color: white;
+}
+
+.tab-content {
+  padding-top: 30px;
+}
+
+.tab-panel {
+  display: none;
+  animation: softIn 240ms var(--ease) both;
+}
+
+.tab-panel.is-active {
+  display: block;
+}
+
+@keyframes softIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  gap: 28px;
+}
+
+.section-block {
+  min-width: 0;
+}
+
+.section-title {
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.section-copy {
+  margin-top: 7px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.light-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.schedule-item,
+.insight-item,
+.revision-item,
+.mini-focus-item {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 18px;
+  align-items: baseline;
+  padding: 2px 0;
+}
+
+.schedule-time,
+.item-kicker {
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.item-title {
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.item-copy {
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.focus-mini {
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  padding: 22px;
+}
+
+.mini-focus-item {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.mini-focus-count {
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.performance-list {
+  display: grid;
+  gap: 20px;
+  max-width: 760px;
+}
+
+.performance-row {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 18px;
+}
+
+.performance-name,
+.performance-value {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.performance-value {
+  text-align: right;
+}
+
+.meter {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.meter-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 360ms var(--ease);
+}
+
+.insights-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+}
+
+.subtle-card {
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.035);
+  padding: 24px;
+}
+
+.empty-state {
+  padding: 28px 0;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.54);
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms var(--ease);
+}
+
+.overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.plan-panel {
+  width: min(100%, 520px);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 26rem),
+    var(--surface);
+  box-shadow: var(--shadow-soft);
+  transform: translateX(32px);
+  transition: transform 300ms var(--ease);
+}
+
+.overlay.is-open .plan-panel {
+  transform: translateX(0);
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 28px 28px 22px;
+}
+
+.panel-kicker {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.panel-title {
+  margin-top: 7px;
+  color: var(--text);
+  font-size: 28px;
+  font-weight: 850;
+  line-height: 1.08;
+}
+
+.icon-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 18px;
+  transition:
+    background 180ms var(--ease),
+    transform 180ms var(--ease);
+}
+
+.icon-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.04);
+}
+
+.step-indicator {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 0 28px 18px;
+}
+
+.step-dot {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.step-dot.is-active {
+  background: var(--accent);
+}
+
+.panel-body {
+  flex: 1;
+  overflow: auto;
+  padding: 4px 28px 28px;
+}
+
+.panel-step {
+  display: none;
+}
+
+.panel-step.is-active {
+  display: block;
+  animation: softIn 220ms var(--ease) both;
+}
+
+.field-group {
+  margin-top: 18px;
+}
+
+.field-label {
+  margin-bottom: 8px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.subject-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.subject-card {
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 18px;
+}
+
+.subject-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.topic-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.topic-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.topic-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.difficulty {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  padding: 4px;
+}
+
+.difficulty button,
+.mode-option {
+  min-height: 34px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 750;
+  transition:
+    background 180ms var(--ease),
+    color 180ms var(--ease),
+    transform 180ms var(--ease);
+}
+
+.difficulty button:hover,
+.mode-option:hover {
+  color: var(--text);
+  transform: scale(1.02);
+}
+
+.difficulty button.is-active,
+.mode-option.is-active {
+  background: var(--accent);
+  color: white;
+}
+
+.mode-selector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  padding: 4px;
+}
+
+.settings-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.panel-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 28px 28px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 80;
+  transform: translate(-50%, 18px);
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: rgba(29, 29, 33, 0.92);
+  color: var(--text);
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(18px);
+  transition:
+    opacity 220ms var(--ease),
+    transform 220ms var(--ease);
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (max-width: 900px) {
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .section-grid,
+  .insights-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .app-shell {
+    padding: 0 18px 58px;
+  }
+
+  .navbar {
+    min-height: 68px;
+  }
+
+  .current-date {
+    display: none;
+  }
+
+  .stats-row {
+    grid-template-columns: 1fr;
+    padding-bottom: 32px;
+  }
+
+  .hero {
+    padding-top: 12px;
+  }
+
+  .hero-header {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .hero-header .button-primary {
+    width: 100%;
+  }
+
+  .task-card {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .task-time {
+    grid-column: 2;
+  }
+
+  .tabs {
+    width: 100%;
+  }
+
+  .tab-button {
+    flex: 1;
+    padding: 0 8px;
+  }
+
+  .schedule-item,
+  .insight-item,
+  .revision-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .performance-row {
+    grid-template-columns: 1fr 48px;
+    gap: 10px;
+  }
+
+  .meter {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .plan-panel {
+    width: 100%;
+  }
+
+  .panel-header,
+  .panel-body,
+  .panel-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .step-indicator {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <nav class="navbar" aria-label="Primary">
+    <div class="brand">StudyFlow</div>
+    <div class="nav-actions">
+      <time class="current-date" id="currentDate"></time>
+      <button class="button button-primary" type="button" id="openPlanPanel">New Plan</button>
+    </div>
+  </nav>
+
+  <section class="stats-row" aria-label="Study stats">
+    <article class="stat-card">
+      <div class="stat-label">Completion Rate</div>
+      <div class="stat-value" id="completionStat">0%</div>
+      <div class="stat-note" id="completionNote">Today</div>
+    </article>
+    <article class="stat-card">
+      <div class="stat-label">Consistency</div>
+      <div class="stat-value" id="consistencyStat">0%</div>
+      <div class="stat-note">7 day signal</div>
+    </article>
+    <article class="stat-card">
+      <div class="stat-label">Pending Tasks</div>
+      <div class="stat-value" id="pendingStat">0</div>
+      <div class="stat-note">Across the plan</div>
+    </article>
+    <article class="stat-card">
+      <div class="stat-label">Days to Exam</div>
+      <div class="stat-value" id="daysStat">0</div>
+      <div class="stat-note" id="examNote">Target date</div>
+    </article>
+  </section>
+
+  <main>
+    <section class="hero" aria-labelledby="todayTitle">
+      <div class="hero-header">
+        <div>
+          <div class="eyebrow">Focus</div>
+          <h1 class="hero-title" id="todayTitle">Today</h1>
+          <p class="hero-subtitle" id="todaySubtitle">0 tasks remaining</p>
+        </div>
+        <button class="button button-primary" type="button" id="markAllComplete">Mark All Complete</button>
+      </div>
+      <div class="task-stack" id="todayTasks" aria-live="polite"></div>
+    </section>
+
+    <section class="tabs-layer" aria-label="Study layers">
+      <div class="tabs" role="tablist" aria-label="Planner tabs">
+        <button class="tab-button is-active" type="button" role="tab" aria-selected="true" aria-controls="overviewPanel" data-tab="overview">Overview</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="performancePanel" data-tab="performance">Performance</button>
+        <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="insightsPanel" data-tab="insights">Insights</button>
+      </div>
+
+      <div class="tab-content">
+        <section class="tab-panel is-active" id="overviewPanel" role="tabpanel" data-panel="overview">
+          <div class="section-grid">
+            <div class="section-block">
+              <h2 class="section-title">Schedule</h2>
+              <p class="section-copy">A light read of the day, kept behind the primary task flow.</p>
+              <div class="light-list" id="scheduleList"></div>
+            </div>
+            <aside class="focus-mini" aria-label="Today focus summary">
+              <h2 class="section-title">Today Focus</h2>
+              <p class="section-copy">The next useful session, without the dashboard noise.</p>
+              <div class="light-list" id="focusSummary"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="performancePanel" role="tabpanel" data-panel="performance">
+          <h2 class="section-title">Performance</h2>
+          <p class="section-copy">Subject progress with thin, calm signals.</p>
+          <div class="light-list performance-list" id="performanceList"></div>
+        </section>
+
+        <section class="tab-panel" id="insightsPanel" role="tabpanel" data-panel="insights">
+          <div class="insights-layout">
+            <section class="subtle-card">
+              <h2 class="section-title">Revision</h2>
+              <p class="section-copy">Recently completed topics that should return soon.</p>
+              <div class="light-list" id="revisionList"></div>
+            </section>
+            <section class="subtle-card">
+              <h2 class="section-title">Recommendations</h2>
+              <p class="section-copy">Small adjustments for the next study block.</p>
+              <div class="light-list" id="recommendationList"></div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="overlay" id="panelOverlay" aria-hidden="true">
+  <aside class="plan-panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
+    <header class="panel-header">
+      <div>
+        <div class="panel-kicker" id="panelStepLabel">Step 1 of 2</div>
+        <h2 class="panel-title" id="panelTitle">Build a new plan</h2>
+      </div>
+      <button class="icon-button" type="button" id="closePanel" aria-label="Close panel">x</button>
+    </header>
+
+    <div class="step-indicator" aria-hidden="true">
+      <div class="step-dot is-active" id="stepDotOne"></div>
+      <div class="step-dot" id="stepDotTwo"></div>
+    </div>
+
+    <div class="panel-body">
+      <section class="panel-step is-active" id="subjectsStep">
+        <p class="section-copy">Add subjects, topics, and difficulty. The planner turns these into daily tasks.</p>
+        <div class="subject-list" id="subjectList"></div>
+        <div class="field-group">
+          <button class="button button-ghost" type="button" id="addSubject">Add Subject</button>
+        </div>
+      </section>
+
+      <section class="panel-step" id="settingsStep">
+        <p class="section-copy">Choose the exam target and how tightly the schedule should focus.</p>
+        <div class="settings-grid">
+          <label class="field-group">
+            <span class="field-label">Exam date</span>
+            <input type="date" id="examDateInput" />
+          </label>
+          <label class="field-group">
+            <span class="field-label">Study hours per day</span>
+            <input type="number" id="hoursInput" min="1" max="12" step="0.5" />
+          </label>
+          <div class="field-group">
+            <div class="field-label">Study mode</div>
+            <div class="mode-selector" id="modeSelector">
+              <button class="mode-option is-active" type="button" data-mode="balanced">Balanced</button>
+              <button class="mode-option" type="button" data-mode="focus">Focus</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="panel-footer">
+      <button class="button button-secondary" type="button" id="backStep">Back</button>
+      <button class="button button-primary" type="button" id="nextStep">Continue</button>
+    </footer>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const DAY_MS = 86400000;
+const TIME_SLOTS = ["9:00 AM", "11:15 AM", "2:30 PM", "5:00 PM", "7:30 PM"];
+
+const initialSubjects = [
+  {
+    name: "Mathematics",
+    topics: [
+      { name: "Integration practice set", difficulty: 3 },
+      { name: "Trigonometry checkpoint", difficulty: 2 },
+      { name: "Differentiation drill", difficulty: 2 }
+    ]
+  },
+  {
+    name: "Physics",
+    topics: [
+      { name: "Optics revision", difficulty: 3 },
+      { name: "Waves and oscillations", difficulty: 2 }
+    ]
+  },
+  {
+    name: "Chemistry",
+    topics: [
+      { name: "Organic mechanisms", difficulty: 3 },
+      { name: "Electrochemistry recap", difficulty: 2 }
+    ]
+  }
+];
+
+const appState = {
+  schedule: {},
+  progress: {
+    completed: [],
+    pending: []
+  },
+  metrics: {},
+  recommendations: [],
+  planMeta: {
+    examDate: null,
+    dailyHours: null,
+    preference: "balanced"
+  },
+  activeTab: "overview",
+  panelStep: 1,
+  draft: createDraft(),
+  isBusy: false,
+  showNextDayTasks: false
+};
+
+const els = {
+  currentDate: document.getElementById("currentDate"),
+  completionStat: document.getElementById("completionStat"),
+  completionNote: document.getElementById("completionNote"),
+  consistencyStat: document.getElementById("consistencyStat"),
+  pendingStat: document.getElementById("pendingStat"),
+  daysStat: document.getElementById("daysStat"),
+  examNote: document.getElementById("examNote"),
+  todaySubtitle: document.getElementById("todaySubtitle"),
+  todayTasks: document.getElementById("todayTasks"),
+  scheduleList: document.getElementById("scheduleList"),
+  focusSummary: document.getElementById("focusSummary"),
+  performanceList: document.getElementById("performanceList"),
+  revisionList: document.getElementById("revisionList"),
+  recommendationList: document.getElementById("recommendationList"),
+  markAllComplete: document.getElementById("markAllComplete"),
+  openPlanPanel: document.getElementById("openPlanPanel"),
+  panelOverlay: document.getElementById("panelOverlay"),
+  closePanel: document.getElementById("closePanel"),
+  panelStepLabel: document.getElementById("panelStepLabel"),
+  panelTitle: document.getElementById("panelTitle"),
+  stepDotOne: document.getElementById("stepDotOne"),
+  stepDotTwo: document.getElementById("stepDotTwo"),
+  subjectsStep: document.getElementById("subjectsStep"),
+  settingsStep: document.getElementById("settingsStep"),
+  subjectList: document.getElementById("subjectList"),
+  addSubject: document.getElementById("addSubject"),
+  examDateInput: document.getElementById("examDateInput"),
+  hoursInput: document.getElementById("hoursInput"),
+  modeSelector: document.getElementById("modeSelector"),
+  backStep: document.getElementById("backStep"),
+  nextStep: document.getElementById("nextStep"),
+  toast: document.getElementById("toast")
+};
+
+function createDraft() {
+  const exam = new Date();
+  exam.setDate(exam.getDate() + 28);
+
+  return {
+    subjects: copySubjects(initialSubjects.slice(0, 2)),
+    examDate: toInputDate(exam),
+    dailyHours: 4,
+    mode: "balanced"
+  };
+}
+
+async function apiRequest(url, options = {}) {
+  const response = await fetch(url, options);
+  const text = await response.text();
+  const data = text ? JSON.parse(text) : {};
+
+  if (!response.ok) {
+    throw new Error(data.detail || "Request failed");
+  }
+
+  return data;
+}
+
+async function loadBackendPlan() {
+  try {
+    const planData = await apiRequest("/plan");
+    setPlanState(planData);
+    renderApp();
+    await refreshMetrics();
+    await refreshRecommendations();
+  } catch (error) {
+    showToast(error.message);
+    renderApp();
+  }
+}
+
+async function refreshMetrics() {
+  try {
+    const data = await apiRequest("/metrics");
+    appState.metrics = data.metrics || {};
+    renderStats();
+    renderPerformance();
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function refreshRecommendations() {
+  try {
+    const data = await apiRequest("/recommendations");
+    appState.recommendations = data.recommendations || [];
+    renderInsights();
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+function setPlanState(data) {
+  appState.schedule = data.schedule || {};
+  appState.progress = data.progress || { completed: [], pending: [] };
+  appState.progress.completed = appState.progress.completed || [];
+  appState.progress.pending = appState.progress.pending || [];
+}
+
+function copySubjects(subjects) {
+  return subjects.map((subject) => ({
+    name: subject.name,
+    topics: subject.topics.map((topic) => ({ ...topic }))
+  }));
+}
+
+function toInputDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function todayStart() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
+
+function formatShortDate(date) {
+  return new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric"
+  }).format(date);
+}
+
+function formatMonthDay(dateString) {
+  const date = new Date(`${dateString}T00:00:00`);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric"
+  }).format(date);
+}
+
+function pluralize(count, singular, plural = `${singular}s`) {
+  return count === 1 ? singular : plural;
+}
+
+function renderApp() {
+  renderDate();
+  renderStats();
+  renderToday();
+  renderTabs();
+  renderOverview();
+  renderPerformance();
+  renderInsights();
+}
+
+function renderDate() {
+  els.currentDate.textContent = formatShortDate(new Date());
+}
+
+function renderStats() {
+  const completed = appState.progress.completed.length;
+  const pending = appState.progress.pending.length || getScheduledTasks().length;
+  const total = completed + pending;
+  const completion = Number.isFinite(appState.metrics.completion_rate)
+    ? Math.round(appState.metrics.completion_rate)
+    : total ? Math.round((completed / total) * 100) : 0;
+  const consistency = Number.isFinite(appState.metrics.consistency)
+    ? Math.round(appState.metrics.consistency)
+    : 0;
+  const examDate = appState.planMeta.examDate || inferExamDate();
+  const daysLeft = examDate
+    ? Math.max(0, Math.ceil((new Date(`${examDate}T00:00:00`) - todayStart()) / DAY_MS))
+    : 0;
+
+  els.completionStat.textContent = `${completion}%`;
+  els.completionNote.textContent = `${completed} of ${total} complete`;
+  els.consistencyStat.textContent = `${consistency}%`;
+  els.pendingStat.textContent = pending;
+  els.daysStat.textContent = daysLeft;
+  els.examNote.textContent = examDate ? formatMonthDay(examDate) : "Target date";
+}
+
+function todaysTasks() {
+  const today = toInputDate(todayStart());
+  const scheduledTasks = getScheduledTasks();
+  const targetDate = appState.showNextDayTasks ? getNextScheduledDate(today) : today;
+
+  if (!targetDate) {
+    return [];
+  }
+
+  return scheduledTasks.filter((task) => task.date === targetDate);
+}
+
+function renderToday() {
+  const tasks = todaysTasks();
+  const remaining = tasks.length;
+  const featured = tasks[0];
+  const today = toInputDate(todayStart());
+  const nextDate = getNextScheduledDate(today);
+  const completedToday = getCompletedTasksForDate(today).length;
+
+  els.todaySubtitle.textContent = `${remaining} ${pluralize(remaining, "task")} remaining`;
+  els.todayTasks.innerHTML = "";
+
+  if (!tasks.length) {
+    if (!appState.showNextDayTasks && completedToday) {
+      els.todaySubtitle.textContent = "Today is complete";
+      els.todayTasks.innerHTML = `
+        <div class="empty-state">
+          All tasks completed for today 🎉
+          ${nextDate ? '<div class="field-group"><button class="button button-ghost" type="button" id="startTomorrowPlan">Start Tomorrow\'s Plan</button></div>' : ""}
+        </div>
+      `;
+      const startButton = document.getElementById("startTomorrowPlan");
+      if (startButton) {
+        startButton.addEventListener("click", () => {
+          appState.showNextDayTasks = true;
+          renderApp();
+        });
+      }
+      return;
+    }
+
+    els.todayTasks.innerHTML = '<div class="empty-state">No tasks scheduled for today.</div>';
+    return;
+  }
+
+  tasks.forEach((task) => {
+    const card = document.createElement("article");
+    card.className = [
+      "task-card",
+      featured && task.id === featured.id ? "is-featured" : ""
+    ].filter(Boolean).join(" ");
+
+    card.innerHTML = `
+      <button class="task-check" type="button" aria-label="Mark complete">OK</button>
+      <div class="task-main">
+        <h2 class="task-title">${escapeHtml(task.title)}</h2>
+        <p class="task-meta">${escapeHtml(task.subject)} / ${task.duration}</p>
+      </div>
+      <div class="task-time">${task.time}</div>
+    `;
+
+    card.querySelector(".task-check").addEventListener("click", () => {
+      completeTask(task);
+    });
+
+    els.todayTasks.appendChild(card);
+  });
+}
+
+function renderTabs() {
+  document.querySelectorAll(".tab-button").forEach((button) => {
+    const active = button.dataset.tab === appState.activeTab;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-selected", active ? "true" : "false");
+  });
+
+  document.querySelectorAll(".tab-panel").forEach((panel) => {
+    panel.classList.toggle("is-active", panel.dataset.panel === appState.activeTab);
+  });
+}
+
+function renderOverview() {
+  const nextTasks = getScheduledTasks().slice(0, 5);
+  const today = todaysTasks();
+  const remaining = today.length;
+
+  els.scheduleList.innerHTML = nextTasks.length
+    ? nextTasks.map((task) => `
+        <div class="schedule-item">
+          <div class="schedule-time">${task.time}</div>
+          <div>
+            <div class="item-title">${escapeHtml(task.title)}</div>
+            <div class="item-copy">${escapeHtml(task.subject)} / ${formatMonthDay(task.date)} / ${task.duration}</div>
+          </div>
+        </div>
+      `).join("")
+    : '<div class="empty-state">Your remaining schedule is clear.</div>';
+
+  const nextTask = today[0];
+  els.focusSummary.innerHTML = `
+    <div class="mini-focus-item">
+      <div>
+        <div class="item-title">${nextTask ? escapeHtml(nextTask.title) : "No active task"}</div>
+        <div class="item-copy">${nextTask ? `${escapeHtml(nextTask.subject)} / ${nextTask.duration}` : "Today is complete."}</div>
+      </div>
+      <div class="mini-focus-count">${remaining}</div>
+    </div>
+  `;
+}
+
+function renderPerformance() {
+  const subjectPerformance = appState.metrics.subject_performance || {};
+  const subjects = Object.keys(subjectPerformance);
+
+  if (!subjects.length) {
+    els.performanceList.innerHTML = '<div class="empty-state">Create a plan to begin performance tracking.</div>';
+    return;
+  }
+
+  els.performanceList.innerHTML = subjects.map((subject) => {
+    const value = Math.round(subjectPerformance[subject] || 0);
+    return `
+      <div class="performance-row">
+        <div class="performance-name">${escapeHtml(subject)}</div>
+        <div class="meter" aria-hidden="true">
+          <div class="meter-fill" style="width: ${value}%"></div>
+        </div>
+        <div class="performance-value">${value}%</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderInsights() {
+  const completed = appState.progress.completed.map(normalizeCompletedTask);
+
+  els.revisionList.innerHTML = completed.length
+    ? completed.slice(-3).reverse().map((task) => `
+        <div class="revision-item">
+          <div class="item-kicker">${escapeHtml(task.subject)}</div>
+          <div>
+            <div class="item-title">${escapeHtml(task.title)}</div>
+            <div class="item-copy">Return to this in a later recall block.</div>
+          </div>
+        </div>
+      `).join("")
+    : '<div class="empty-state">Complete a task to begin the revision queue.</div>';
+
+  const recommendations = appState.recommendations;
+
+  if (!recommendations.length) {
+    els.recommendationList.innerHTML = '<div class="empty-state">Create a plan to receive recommendations.</div>';
+    return;
+  }
+
+  els.recommendationList.innerHTML = recommendations.map((item) => `
+    <div class="insight-item">
+      <div class="item-kicker">Advice</div>
+      <div>
+        <div class="item-title">${escapeHtml(item)}</div>
+        <div class="item-copy">Updated from your current progress.</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+async function completeTask(task, options = {}) {
+  if (appState.isBusy) return;
+  appState.isBusy = true;
+
+  try {
+    const data = await apiRequest("/complete-task", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        date: task.date,
+        task: task.raw,
+        actual_time_taken: task.timeRequired
+      })
+    });
+    setPlanState(data);
+
+    if (!options.silent) {
+      await refreshMetrics();
+      await refreshRecommendations();
+      renderApp();
+      showToast("Task completed");
+    }
+  } catch (error) {
+    showToast(error.message);
+  } finally {
+    appState.isBusy = false;
+  }
+}
+
+async function markAllToday() {
+  const tasks = todaysTasks();
+  if (!tasks.length) {
+    showToast("No tasks to complete");
+    return;
+  }
+
+  for (const task of tasks) {
+    await completeTask(task, { silent: true });
+  }
+
+  await refreshMetrics();
+  await refreshRecommendations();
+  renderApp();
+  showToast("Today is complete");
+}
+
+function openPanel() {
+  appState.draft = createDraft();
+  appState.panelStep = 1;
+  syncDraftInputs();
+  renderPanel();
+  els.panelOverlay.classList.add("is-open");
+  els.panelOverlay.setAttribute("aria-hidden", "false");
+}
+
+function closePanel() {
+  els.panelOverlay.classList.remove("is-open");
+  els.panelOverlay.setAttribute("aria-hidden", "true");
+}
+
+function syncDraftInputs() {
+  els.examDateInput.value = appState.draft.examDate;
+  els.hoursInput.value = appState.draft.dailyHours;
+}
+
+function renderPanel() {
+  const step = appState.panelStep;
+  els.panelStepLabel.textContent = `Step ${step} of 2`;
+  els.panelTitle.textContent = step === 1 ? "Build a new plan" : "Plan settings";
+  els.stepDotOne.classList.toggle("is-active", step === 1);
+  els.stepDotTwo.classList.toggle("is-active", step === 2);
+  els.subjectsStep.classList.toggle("is-active", step === 1);
+  els.settingsStep.classList.toggle("is-active", step === 2);
+  els.backStep.style.visibility = step === 1 ? "hidden" : "visible";
+  els.nextStep.textContent = step === 1 ? "Continue" : "Create Plan";
+
+  renderSubjectEditor();
+  renderModeSelector();
+}
+
+function renderSubjectEditor() {
+  els.subjectList.innerHTML = "";
+
+  appState.draft.subjects.forEach((subject, subjectIndex) => {
+    const card = document.createElement("article");
+    card.className = "subject-card";
+    card.innerHTML = `
+      <div class="subject-head">
+        <label>
+          <span class="field-label">Subject</span>
+          <input type="text" value="${escapeHtml(subject.name)}" data-subject-name="${subjectIndex}" />
+        </label>
+        <button class="button button-secondary" type="button" data-remove-subject="${subjectIndex}">Remove</button>
+      </div>
+      <div class="topic-list" data-topic-list="${subjectIndex}"></div>
+      <div class="field-group">
+        <button class="button button-secondary" type="button" data-add-topic="${subjectIndex}">Add topic</button>
+      </div>
+    `;
+
+    const topicList = card.querySelector(`[data-topic-list="${subjectIndex}"]`);
+    subject.topics.forEach((topic, topicIndex) => {
+      topicList.appendChild(createTopicRow(topic, subjectIndex, topicIndex));
+    });
+
+    els.subjectList.appendChild(card);
+  });
+}
+
+function createTopicRow(topic, subjectIndex, topicIndex) {
+  const row = document.createElement("div");
+  const topicTime = getTopicTime(topic);
+  row.className = "topic-row";
+  row.innerHTML = `
+    <label>
+      <span class="field-label">Topic</span>
+      <input type="text" value="${escapeHtml(topic.name)}" data-topic-name="${subjectIndex}:${topicIndex}" />
+    </label>
+    <div class="topic-actions">
+      <div class="difficulty" aria-label="Difficulty">
+        <button type="button" class="${topic.difficulty === 1 ? "is-active" : ""}" data-difficulty="${subjectIndex}:${topicIndex}:1">Easy</button>
+        <button type="button" class="${topic.difficulty === 2 ? "is-active" : ""}" data-difficulty="${subjectIndex}:${topicIndex}:2">Medium</button>
+        <button type="button" class="${topic.difficulty === 3 ? "is-active" : ""}" data-difficulty="${subjectIndex}:${topicIndex}:3">Hard</button>
+      </div>
+      <button class="button button-secondary" type="button" data-remove-topic="${subjectIndex}:${topicIndex}">Remove</button>
+    </div>
+    <label class="field-group">
+      <span class="field-label">Estimated time (hrs)</span>
+      <input type="number" step="0.5" min="0.5" value="${topicTime}" data-topic-time="${subjectIndex}:${topicIndex}" />
+    </label>
+  `;
+  return row;
+}
+
+function renderModeSelector() {
+  els.modeSelector.querySelectorAll(".mode-option").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.mode === appState.draft.mode);
+  });
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function updateDraftFromInputs() {
+  els.subjectList.querySelectorAll("[data-subject-name]").forEach((input) => {
+    appState.draft.subjects[Number(input.dataset.subjectName)].name = input.value;
+  });
+
+  els.subjectList.querySelectorAll("[data-topic-name]").forEach((input) => {
+    const [subjectIndex, topicIndex] = input.dataset.topicName.split(":").map(Number);
+    appState.draft.subjects[subjectIndex].topics[topicIndex].name = input.value;
+  });
+
+  els.subjectList.querySelectorAll("[data-topic-time]").forEach((input) => {
+    const [subjectIndex, topicIndex] = input.dataset.topicTime.split(":").map(Number);
+    const value = Number(input.value);
+    appState.draft.subjects[subjectIndex].topics[topicIndex].time_required =
+      Number.isFinite(value) && value >= 0.5 ? value : "";
+  });
+
+  appState.draft.examDate = els.examDateInput.value || appState.draft.examDate;
+  appState.draft.dailyHours = Number(els.hoursInput.value) || appState.draft.dailyHours;
+}
+
+function addSubject() {
+  updateDraftFromInputs();
+  appState.draft.subjects.push({
+    name: "New Subject",
+    topics: [{ name: "New topic", difficulty: 2, time_required: 1.5 }]
+  });
+  renderPanel();
+}
+
+function addTopic(subjectIndex) {
+  updateDraftFromInputs();
+  appState.draft.subjects[subjectIndex].topics.push({ name: "New topic", difficulty: 2, time_required: 1.5 });
+  renderPanel();
+}
+
+function removeSubject(subjectIndex) {
+  updateDraftFromInputs();
+  appState.draft.subjects.splice(subjectIndex, 1);
+  if (!appState.draft.subjects.length) {
+    addSubject();
+    return;
+  }
+  renderPanel();
+}
+
+function removeTopic(subjectIndex, topicIndex) {
+  updateDraftFromInputs();
+  const topics = appState.draft.subjects[subjectIndex].topics;
+  topics.splice(topicIndex, 1);
+  if (!topics.length) {
+    topics.push({ name: "New topic", difficulty: 2, time_required: 1.5 });
+  }
+  renderPanel();
+}
+
+function setDifficulty(subjectIndex, topicIndex, difficulty) {
+  updateDraftFromInputs();
+  appState.draft.subjects[subjectIndex].topics[topicIndex].difficulty = difficulty;
+  appState.draft.subjects[subjectIndex].topics[topicIndex].time_required = difficultyToTime(difficulty);
+  renderPanel();
+}
+
+async function goNext() {
+  updateDraftFromInputs();
+
+  if (appState.panelStep === 1) {
+    appState.panelStep = 2;
+    renderPanel();
+    return;
+  }
+
+  const payload = {
+    subjects: buildSubjectsPayload(appState.draft.subjects),
+    exam_date: appState.draft.examDate,
+    daily_hours: Number(appState.draft.dailyHours) || 4,
+    preference: appState.draft.mode
+  };
+
+  if (!payload.subjects.length) {
+    showToast("Add at least one topic");
+    return;
+  }
+
+  try {
+    els.nextStep.disabled = true;
+    const data = await apiRequest("/create-plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    appState.planMeta = {
+      examDate: payload.exam_date,
+      dailyHours: payload.daily_hours,
+      preference: payload.preference
+    };
+    appState.showNextDayTasks = false;
+    setPlanState(data);
+    closePanel();
+    await refreshMetrics();
+    await refreshRecommendations();
+    renderApp();
+    showToast("New plan created");
+  } catch (error) {
+    showToast(error.message);
+  } finally {
+    els.nextStep.disabled = false;
+  }
+}
+
+function goBack() {
+  updateDraftFromInputs();
+  appState.panelStep = 1;
+  renderPanel();
+}
+
+function showToast(message) {
+  els.toast.textContent = message;
+  els.toast.classList.add("is-visible");
+  window.clearTimeout(showToast.timer);
+  showToast.timer = window.setTimeout(() => {
+    els.toast.classList.remove("is-visible");
+  }, 1800);
+}
+
+function buildSubjectsPayload(subjects) {
+  return copySubjects(subjects)
+    .filter((subject) => subject.name.trim())
+    .map((subject) => ({
+      name: subject.name.trim(),
+      topics: subject.topics
+        .filter((topic) => topic.name.trim())
+        .map((topic) => {
+          const difficulty = Number(topic.difficulty) || 2;
+          const timeRequired = Number(topic.time_required);
+          return {
+            name: topic.name.trim(),
+            difficulty,
+            time_required: Number.isFinite(timeRequired) && timeRequired >= 0.5
+              ? timeRequired
+              : difficultyToTime(difficulty)
+          };
+        })
+    }))
+    .filter((subject) => subject.topics.length);
+}
+
+function difficultyToTime(difficulty) {
+  if (difficulty >= 3) return 2;
+  if (difficulty === 2) return 1.5;
+  return 1;
+}
+
+function getTopicTime(topic) {
+  const value = Number(topic.time_required);
+  if (Number.isFinite(value) && value >= 0.5) {
+    return value;
+  }
+
+  return difficultyToTime(Number(topic.difficulty) || 2);
+}
+
+function getScheduledTasks() {
+  return Object.entries(appState.schedule)
+    .flatMap(([date, tasks]) => tasks.map((task, index) => normalizeScheduledTask(task, date, index)))
+    .sort((a, b) => `${a.date}-${a.index}`.localeCompare(`${b.date}-${b.index}`));
+}
+
+function normalizeScheduledTask(task, date, index) {
+  const title = task.topic || task.title || task.name || "Study task";
+  const subject = task.subject || "Study";
+  const timeRequired = Number(task.time_required || task.weight || task.estimated_time || 1);
+
+  return {
+    id: `${date}-${subject}-${title}-${index}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+    title,
+    subject,
+    date,
+    index,
+    time: TIME_SLOTS[index % TIME_SLOTS.length],
+    timeRequired,
+    duration: formatDuration(timeRequired),
+    raw: task
+  };
+}
+
+function normalizeCompletedTask(task) {
+  const timeRequired = Number(task.time_required || task.weight || task.estimated_time || 1);
+  return {
+    title: task.topic || task.title || task.name || "Study task",
+    subject: task.subject || "Study",
+    date: task.date || task.planned_date,
+    duration: formatDuration(timeRequired),
+    raw: task
+  };
+}
+
+function getCompletedTasksForDate(date) {
+  return appState.progress.completed.filter((task) => (
+    task.date === date || task.planned_date === date
+  ));
+}
+
+function getNextScheduledDate(afterDate) {
+  return Object.keys(appState.schedule)
+    .filter((date) => date > afterDate && (appState.schedule[date] || []).length)
+    .sort()[0] || null;
+}
+
+function formatDuration(hours) {
+  const value = Number(hours) || 1;
+  if (value < 1) {
+    return `${Math.round(value * 60)}m`;
+  }
+  return Number.isInteger(value) ? `${value}h` : `${value.toFixed(1)}h`;
+}
+
+function inferExamDate() {
+  const dates = Object.keys(appState.schedule).sort();
+  if (!dates.length) return null;
+  return dates[dates.length - 1];
+}
+
+async function rebalancePlan() {
+  try {
+    const data = await apiRequest("/rebalance", { method: "POST" });
+    setPlanState(data);
+    await refreshMetrics();
+    await refreshRecommendations();
+    renderApp();
+    showToast("Plan rebalanced");
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+document.querySelectorAll(".tab-button").forEach((button) => {
+  button.addEventListener("click", () => {
+    appState.activeTab = button.dataset.tab;
+    renderTabs();
+  });
+});
+
+els.markAllComplete.addEventListener("click", markAllToday);
+els.openPlanPanel.addEventListener("click", openPanel);
+els.closePanel.addEventListener("click", closePanel);
+els.panelOverlay.addEventListener("click", (event) => {
+  if (event.target === els.panelOverlay) closePanel();
+});
+els.addSubject.addEventListener("click", addSubject);
+els.backStep.addEventListener("click", goBack);
+els.nextStep.addEventListener("click", goNext);
+
+els.subjectList.addEventListener("click", (event) => {
+  const addTopicButton = event.target.closest("[data-add-topic]");
+  const removeSubjectButton = event.target.closest("[data-remove-subject]");
+  const removeTopicButton = event.target.closest("[data-remove-topic]");
+  const difficultyButton = event.target.closest("[data-difficulty]");
+
+  if (addTopicButton) {
+    addTopic(Number(addTopicButton.dataset.addTopic));
+  }
+
+  if (removeSubjectButton) {
+    removeSubject(Number(removeSubjectButton.dataset.removeSubject));
+  }
+
+  if (removeTopicButton) {
+    const [subjectIndex, topicIndex] = removeTopicButton.dataset.removeTopic.split(":").map(Number);
+    removeTopic(subjectIndex, topicIndex);
+  }
+
+  if (difficultyButton) {
+    const [subjectIndex, topicIndex, difficulty] = difficultyButton.dataset.difficulty.split(":").map(Number);
+    setDifficulty(subjectIndex, topicIndex, difficulty);
+  }
+});
+
+els.modeSelector.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-mode]");
+  if (!button) return;
+  appState.draft.mode = button.dataset.mode;
+  renderModeSelector();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && els.panelOverlay.classList.contains("is-open")) {
+    closePanel();
+  }
+});
+
+document.querySelectorAll("#rebalanceButton, [data-action='rebalance']").forEach((button) => {
+  button.addEventListener("click", rebalancePlan);
+});
+
+renderApp();
+loadBackendPlan();
+</script>
+</body>
+</html>
